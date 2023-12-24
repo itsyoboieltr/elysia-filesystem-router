@@ -1,0 +1,35 @@
+{
+  "name": "elysia-filesystem-router",
+  "version": "1.0.0",
+  "description": "Filesystem router for Elysia.",
+  "author": "Norbert Elter <norbert.elter0@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/itsyoboieltr/elysia-filesystem-router#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsyoboieltr/elysia-filesystem-router.git"
+  },
+  "bugs": "https://github.com/itsyoboieltr/elysia-filesystem-router/issues",
+  "keywords": [
+    "bun",
+    "elysia"
+  ],
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "publish": "npm publish",
+    "dev": "bun run --watch playground/index.ts",
+    "start": "bun run playground/index.ts"
+  },
+  "peerDependencies": {
+    "elysia": ">= 0.8.3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "elysia": "0.8.3",
+    "@elysiajs/eden": "0.8.0"
+  }
+}
