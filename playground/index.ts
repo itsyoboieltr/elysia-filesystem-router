@@ -8,6 +8,6 @@ export type App = typeof app;
 
 const eden = edenTreaty<App>('http://localhost:3000');
 
-const response = await eden.example.get();
+const response = await eden.hello.test.get();
 
 console.log(response.data);

@@ -3,8 +3,8 @@ import path from 'node:path';
 
 async function generateTypeDefinitions(
   relativeDirs: string[],
-  importNames: string[],
-  rootDepth: number
+  routeNames: string[],
+  importNames: string[]
 ) {
   let output = '';
 
@@ -52,11 +52,7 @@ declare global {
   output += `  type ElysiaFileSystemRouter = `;
   for (let i = 0; i < importNames.length; i++) {
     if (i > 0) output += ' & ';
-    const routeName = `${path.sep}${relativeDirs[i]
-      .split(path.sep)
-      .toSpliced(0, rootDepth)
-      .join(path.sep)}`;
-    output += `RemapElysiaWithPrefix<typeof ${importNames[i]}, '${routeName}'>`;
+    output += `RemapElysiaWithPrefix<typeof ${importNames[i]}, '${routeNames[i]}'>`;
   }
   output += ';\n';
   output += '}\n';
@@ -89,6 +85,13 @@ export async function fileSystemRouter(
     path.join(root, path.dirname(path.relative(rootPath, file)))
   );
 
+  const routeNames = relativeDirs.map((relativeDir) => {
+    return `${path.sep}${relativeDir
+      .split(path.sep)
+      .toSpliced(0, rootDepth)
+      .join(path.sep)}`;
+  });
+
   const importNames = relativeDirs.map((relativeDir) => {
     return relativeDir
       .split(path.sep)
@@ -110,12 +113,12 @@ export async function fileSystemRouter(
         `The file '${files[index]}' does not export a route named '${importNames[index]}'`
       );
     route.routes.forEach((route) => {
-      route.path = path.join(relativeDirs[index], route.path);
+      route.path = path.join(routeNames[index], route.path);
     });
     instance.use(route);
   }
 
-  await generateTypeDefinitions(relativeDirs, importNames, rootDepth);
+  await generateTypeDefinitions(relativeDirs, routeNames, importNames);
 
   return instance as ElysiaFileSystemRouter;
 }
