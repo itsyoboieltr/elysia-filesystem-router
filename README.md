@@ -32,9 +32,9 @@ export const exampleRoute = new Elysia().get('', 'Hello world!');
 
 The router is looking for `index.ts` files under the specified root directory `rootDir` to register the routes. Once a file has been found, the router will try to find an exported `Elysia` instance in the file, and register the routes under the prefix of the directory name. Since the directory name is used as the prefix of the Elysia instance, please do NOT manually set the prefix, as it can cause unexpected behavior. The required name of the exported Elysia instance depends on the directory name:
 
-- `rootDir/example/index.ts` -> `exampleRouter`
-- `rootDir/user/index.ts` -> `userRouter`
-- `rootDir/user/profile/index.ts` -> `userProfileRouter`
+- `rootDir/example/index.ts` -> `exampleRoute`
+- `rootDir/user/index.ts` -> `userRoute`
+- `rootDir/user/profile/index.ts` -> `userProfileRoute`
 
 ## Configuration
 
