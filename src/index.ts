@@ -2,7 +2,7 @@ import Elysia from 'elysia';
 import path from 'node:path';
 
 async function generateTypeDefinitions(
-  relativeDirs: string[],
+  rootPath: string,
   routeNames: string[],
   importNames: string[]
 ) {
@@ -12,8 +12,8 @@ async function generateTypeDefinitions(
   output += `import type Elysia from 'elysia';\n`;
 
   // Generate the import statements for the routes
-  for (let i = 0; i < relativeDirs.length; i++) {
-    output += `import { ${importNames[i]} } from './${relativeDirs[i]}';\n`;
+  for (let i = 0; i < routeNames.length; i++) {
+    output += `import { ${importNames[i]} } from '.${routeNames[i]}';\n`;
   }
 
   // Generate the utility types
@@ -58,7 +58,7 @@ declare global {
   output += '}\n';
 
   // Write the output to the declaration file
-  await Bun.write(path.join(path.dirname(Bun.main), 'routes.d.ts'), output);
+  await Bun.write(path.join(rootPath, 'routes.d.ts'), output);
 }
 
 export interface FileSystemRouterConfig {
@@ -66,14 +66,14 @@ export interface FileSystemRouterConfig {
 }
 
 export async function fileSystemRouter(
-  config: FileSystemRouterConfig = { rootDir: '.' }
+  config: FileSystemRouterConfig = { rootDir: 'src/routes' }
 ) {
   const instance = new Elysia({ name: 'filesystem-router', seed: config });
   const root = path.normalize(
     config.rootDir.replace(/^\.?\//, '').replace(/\/$/, '')
   );
   const rootDepth = root === '.' ? 0 : root.split(path.sep).length;
-  const rootPath = path.join(path.dirname(Bun.main), root);
+  const rootPath = path.resolve(root);
   const mainFile = path.join(rootPath, 'index.ts');
 
   const glob = new Bun.Glob('**/index.ts');
@@ -106,19 +106,19 @@ export async function fileSystemRouter(
   });
 
   for (let index = 0; index < files.length; index++) {
-    const imported = await import(files[index]);
-    const route = imported[importNames[index]] as Elysia;
+    const imported = await import(files[index]!);
+    const route = imported[importNames[index]!] as Elysia;
     if (!route)
       throw new Error(
         `The file '${files[index]}' does not export a route named '${importNames[index]}'`
       );
     route.routes.forEach((route) => {
-      route.path = path.join(routeNames[index], route.path);
+      route.path = path.join(routeNames[index]!, route.path);
     });
     instance.use(route);
   }
 
-  await generateTypeDefinitions(relativeDirs, routeNames, importNames);
+  await generateTypeDefinitions(rootPath, routeNames, importNames);
 
   return instance as ElysiaFileSystemRouter;
 }

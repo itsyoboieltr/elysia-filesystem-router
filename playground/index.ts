@@ -2,7 +2,9 @@ import { Elysia } from 'elysia';
 import { edenTreaty } from '@elysiajs/eden';
 import { fileSystemRouter } from '../src';
 
-export const app = new Elysia().use(await fileSystemRouter()).listen(3000);
+export const app = new Elysia()
+  .use(await fileSystemRouter({ rootDir: 'playground' }))
+  .listen(3000);
 
 export type App = typeof app;
 

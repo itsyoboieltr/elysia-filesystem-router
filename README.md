@@ -13,16 +13,19 @@ bun add elysia-filesystem-router
 ### 1. Register the plugin
 
 ```ts
+// file: src/routes/index.ts
 import { Elysia } from 'elysia';
 import { fileSystemRouter } from 'elysia-filesystem-router';
 
-new Elysia().use(await fileSystemRouter()).listen(3000);
+new Elysia()
+  .use(await fileSystemRouter({ rootDir: 'src/routes' }))
+  .listen(3000);
 ```
 
 ### 2. Create your filesystem routes
 
 ```ts
-// file: src/example/index.ts
+// file: src/routes/example/index.ts
 // url: http://localhost:3000/example
 
 import { Elysia } from 'elysia';

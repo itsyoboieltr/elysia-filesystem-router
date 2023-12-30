@@ -1,6 +1,6 @@
 {
   "name": "elysia-filesystem-router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Filesystem router for Elysia.",
   "author": "Norbert Elter <norbert.elter0@gmail.com>",
   "license": "MIT",
