@@ -20,7 +20,6 @@
     "src"
   ],
   "scripts": {
-    "publish": "npm publish",
     "dev": "bun run --watch playground/index.ts",
     "start": "bun run playground/index.ts"
   },
